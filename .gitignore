@@ -208,3 +208,5 @@ __marimo__/
 data/raw/
 venv/
 infra/terraform/credentials.json
+infra/terraform/.terraform/
+infra/terraform/.terraform.lock.hcl
