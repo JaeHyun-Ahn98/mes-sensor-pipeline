@@ -1,6 +1,7 @@
 import os
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
+from google.oauth2 import service_account
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'infra/terraform/credentials.json'
 
@@ -14,9 +15,12 @@ def create_spark_session():
         .appName('SensorBatchProcessing') \
         .config('spark.jars.packages',
                 'com.google.cloud.bigdataoss:gcs-connector:hadoop3-2.2.22') \
+        .config('spark.jars.ivy', '/home/airflow/.ivy2.5.2') \
         .config('spark.hadoop.google.cloud.auth.service.account.enable', 'true') \
         .config('spark.hadoop.google.cloud.auth.service.account.json.keyfile',
-                'infra/terraform/credentials.json') \
+                '/opt/airflow/credentials.json') \
+        .config('spark.hadoop.mapreduce.fileoutputcommitter.algorithm.version', '2') \
+        .config('spark.hadoop.fs.gs.implicit.dir.repair.enable', 'false') \
         .config('spark.hadoop.fs.gs.impl',
                 'com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem') \
         .getOrCreate()
@@ -75,7 +79,12 @@ def process_sensor_data(spark):
         .parquet(f'gs://{BUCKET_NAME}/processed/daily_stats.parquet')
 
     # GCS Parquet → BigQuery 로드
-    bq_client = bigquery.Client(project=PROJECT_ID)
+    bq_client = bigquery.Client(
+    project=PROJECT_ID,
+    credentials=service_account.Credentials.from_service_account_file(
+        '/opt/airflow/credentials.json'
+    )
+)
 
     job_config = bigquery.LoadJobConfig(
         source_format=bigquery.SourceFormat.PARQUET,
