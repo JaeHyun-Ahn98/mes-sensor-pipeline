@@ -1,0 +1,9 @@
+# models/staging/sources.yml
+version: 2
+
+sources:
+  - name: sensor_data
+    database: mes-sensor-pipeline
+    schema: sensor_data
+    tables:
+      - name: sensor_daily_stats
