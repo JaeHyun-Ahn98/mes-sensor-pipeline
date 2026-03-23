@@ -16,6 +16,8 @@
 
 👉 **[Looker Studio Dashboard 보기](https://lookerstudio.google.com/reporting/23885116-b67b-491b-ae6e-a83d658335e2)**
 
+![Dashboard](docs/dashboard.png)
+
 ---
 
 ## 🏗️ 아키텍처
