@@ -16,7 +16,7 @@
 
 👉 **[Looker Studio Dashboard 보기](https://lookerstudio.google.com/reporting/23885116-b67b-491b-ae6e-a83d658335e2)**
 
-![Dashboard](docs/dashboard.png)
+![Dashboard](docs/dashboard.PNG)
 
 ---
 
@@ -92,7 +92,7 @@ BROKEN 발생 시점 전후 51개 센서를 전수 분석했으나, 샘플 수(7
 ### 1. EDA로 잘못된 가설 수정 → Flink 로직 전면 재설계
 처음엔 RECOVERING 감지 로직을 작성하려 했으나, EDA에서 BROKEN 7개를 전수 확인한 결과 패턴이 반대였음을 발견. **데이터를 먼저 보는 것이 왜 중요한지** 직접 경험한 케이스.
 
-### 2. Airflow JAR 다운로드 2.7시간 → 2초
+### 2. Airflow JAR 다운로드 2시간40분 → 2초
 `spark.jars.packages` 방식은 컨테이너 환경에서 매번 Maven Central에서 JAR를 다운로드. conscrypt JAR 다운로드에 2.7시간 소요되어 Airflow Heartbeat 타임아웃(30분) 초과로 Task 강제 종료. 로컬 ivy 캐시 폴더를 Docker volumes로 마운트해 해결. 캐싱 전략의 중요성 체감.
 
 ### 3. GCS Parquet rename 실패 → FileOutputCommitter v2
